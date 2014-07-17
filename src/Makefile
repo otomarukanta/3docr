@@ -14,7 +14,6 @@ OBJECTS = $(addprefix $(OBJDIR)/, $(SOURCES:.cpp=.o))
 	 
 $(TARGET): $(OBJECTS) $(LIBS)
 	$(COMPILER) -o $@ $^ $(LDFLAGS)
-	./$(TARGET)
 	 
 $(OBJDIR)/%.o: %.cpp
 	@[ -d $(OBJDIR) ] || mkdir -p $(OBJDIR)
@@ -27,3 +26,5 @@ clean:
 	@rmdir --ignore-fail-on-non-empty `readlink -f $(OBJDIR)`
 	 
 	 -include $(DEPENDS)
+run:
+	./$(TARGET)
