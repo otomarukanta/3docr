@@ -8,6 +8,11 @@ public:
 		next_label = new int[w*h/4];
 		tail_label = new unsigned int[w*h/4];
 	}
+	~Labeling() {
+		delete [] rl_table;
+		delete [] next_label;
+		delete [] tail_label;
+	}
  
 	unsigned int exec(const cv::Mat &src_img, unsigned int *pixels) ;
 private:

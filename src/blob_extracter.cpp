@@ -14,16 +14,17 @@ void BlobExtracter::extract(const cv::Mat& src_img, std::vector<Blob>& blobs) {
 // 		test_img.data[p] = label_img[p];
 // 	}
 // 	cv::imshow("test2", test_img);
+	std::vector<Blob> blobs_tmp(num_label);
 	blobs.clear();
-	blobs.resize(num_label);
+	blobs.reserve(num_label);
 	for (unsigned int y = 0; y < height; ++y) {
 		for (unsigned int x = 0; x < width; ++x) {
 			unsigned int label = label_img[y*width + x];
 			if (label != 0) {
-				Blob& b  = blobs[label];
-				if (blobs[label].sum == 0) {
-					blobs[label].pt1 = cv::Point_<unsigned int>(x,y);
-					blobs[label].pt2 = cv::Point_<unsigned int>(x,y);
+				Blob& b  = blobs_tmp[label];
+				if (b.sum == 0) {
+					b.pt1 = cv::Point_<unsigned int>(x,y);
+					b.pt2 = cv::Point_<unsigned int>(x+1,y+1);
 				}else {
 					if (b.pt1.x > x) {
 					   b.pt1.x = x;
@@ -37,6 +38,18 @@ void BlobExtracter::extract(const cv::Mat& src_img, std::vector<Blob>& blobs) {
 				}
 				b.sum++;
 			}
+		}
+	}
+
+	int cluster = 1;
+	for (auto it = blobs_tmp.begin(); it != blobs_tmp.end(); ++it) {
+		if ( it->sum >= 50 ) {
+			it->center = cv::Point_<unsigned int>((it->pt1.x + it->pt2.x) / 2,(it->pt1.y + it->pt2.y)/2);
+			it->cluster = cluster;
+			cv::Mat roi_img(src_img, cv::Rect(it->pt1, it->pt2));
+			it->image = roi_img.clone();
+			blobs.push_back(*it);
+			cluster++;
 		}
 	}
 }

@@ -1,11 +1,11 @@
 COMPILER = g++
-	CFLAGS = -Wextra -g -MMD -MP
+	CFLAGS = -std=c++0x -Wextra -g -MMD -MP -O3
 	LDFLAGS = -lpthread -lopencv_highgui
 	LIBS = 
 	INCLUDE = -I../include
 	TARGET = ../bin/$(shell basename `readlink -f ..`)
 	OBJDIR = ./obj
-	ifeq "$(strip $(OBJDIR))" ""
+ifeq "$(strip $(OBJDIR))" ""
 	OBJDIR = .
 endif
 SOURCES = $(wildcard *.cpp)
@@ -25,6 +25,6 @@ clean:
 	rm -f $(OBJECTS) $(DEPENDS) $(TARGET)
 	@rmdir --ignore-fail-on-non-empty `readlink -f $(OBJDIR)`
 	 
-	 -include $(DEPENDS)
+#	 -include $(DEPENDS)
 run:
 	./$(TARGET)
