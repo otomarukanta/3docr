@@ -41,7 +41,7 @@ void BlobExtracter::extract(const cv::Mat& src_img, std::vector<Blob>& blobs) {
 		}
 	}
 
-	int cluster = 1;
+	int cluster = 0;
 	for (auto it = blobs_tmp.begin(); it != blobs_tmp.end(); ++it) {
 		if ( it->sum >= 50 ) {
 			it->center = cv::Point_<unsigned int>((it->pt1.x + it->pt2.x) / 2,(it->pt1.y + it->pt2.y)/2);

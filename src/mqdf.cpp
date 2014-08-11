@@ -44,7 +44,7 @@ void MQDF::read_dic(std::string dicname) {
 	std::cout << "Power v   : " << power << std::endl;
 	std::cout << "Max_k     : " << max_k << std::endl;
 	std::cout << "Sigma : " << sigma << std::endl;
-	use_k = 80;
+	use_k = 70;
 	alpha = 0.1;
 
 }
@@ -55,6 +55,7 @@ unsigned short MQDF::classfy(Eigen::VectorXd X) {
 
 	std::vector<double> func_value(num_category);
 
+// #pragma omp paralell for
 	for (unsigned int ci = 0; ci < num_category; ++ci) {
 		double first_term = (X - mean_vectors[ci]).squaredNorm();
 		// 第2項の計算
@@ -72,6 +73,9 @@ unsigned short MQDF::classfy(Eigen::VectorXd X) {
 		}
 		func_value[ci] =  (1.0 / (alpha * sigma)) * (first_term - second_term) + third_term;
 	} 
+	double min_func = *std::min_element(func_value.begin(), func_value.end()); 
+	if (min_func >= 500) return num_category;
+// 	std::cout << min_func << std::endl;
 	return std::distance(func_value.begin(), std::min_element(func_value.begin(),func_value.end()));
 }
 

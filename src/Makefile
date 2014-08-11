@@ -1,9 +1,9 @@
 COMPILER = g++
-	CFLAGS = -std=c++0x -Wextra -g -MMD -MP -O3
-	LDFLAGS = -lpthread -lopencv_highgui
+	CFLAGS = -std=c++0x -fopenmp -Wextra -g -MMD -MP -O3
+	LDFLAGS = -lm -lpthread -lopencv_highgui -lopencv_core -lopencv_imgproc
 	LIBS = 
-	INCLUDE = -I../include
-	TARGET = ../bin/$(shell basename `readlink -f ..`)
+	INCLUDE = -I/usr/local/include/eigen3 -I../include
+	TARGET = ../bin/3docr
 	OBJDIR = ./obj
 ifeq "$(strip $(OBJDIR))" ""
 	OBJDIR = .

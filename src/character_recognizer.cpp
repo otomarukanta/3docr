@@ -9,14 +9,24 @@ CharacterRecognizer::CharacterRecognizer(std::string dicname) : codes(0), featur
 
 void CharacterRecognizer::recognize(std::vector<Blob> &blobs) {
 	for (auto it = blobs.begin(); it != blobs.end(); ++it){
+// 		std::cout << it->cluster << " " << blobs.size() << std::endl;
 		// extract feature vector
 		Eigen::VectorXd feature_vector(392);  //!MN
 		feature_extracter.extract(it->image, feature_vector);
 
 		unsigned short category = mqdf.classfy(feature_vector);
+		if (category == num_category) {
+			it = blobs.erase(it);
+// 			if (it != blobs.begin()) --it;
+			--it;
+			if (blobs.size() == 0) break;
+			continue;
+		}
 		it->category = category;
 		it->character = category2string(category);
 	}
+// 	std::cout << blobs.size() <<std::endl;
+	
 }
 
 char CharacterRecognizer::category2string(unsigned int category) {
